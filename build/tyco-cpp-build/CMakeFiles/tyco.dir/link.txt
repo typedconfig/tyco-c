@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtyco.a CMakeFiles/tyco.dir/src/parser.cpp.o
+/usr/bin/ranlib libtyco.a

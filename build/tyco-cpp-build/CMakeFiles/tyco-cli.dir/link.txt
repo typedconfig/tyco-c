@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/tyco-cli.dir/link.d "CMakeFiles/tyco-cli.dir/src/main.cpp.o" -o tyco-cli  libtyco.a

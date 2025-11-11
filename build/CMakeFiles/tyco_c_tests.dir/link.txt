@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/tyco_c_tests.dir/link.d CMakeFiles/tyco_c_tests.dir/tests/c_api_test.cpp.o -o tyco_c_tests  -Wl,-rpath,/home/mlauria/typedconfig/tyco-c/build libtyco_c.so
