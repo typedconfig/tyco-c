@@ -122,4 +122,88 @@ void tyco_free_string(char* str) {
     std::free(str);
 }
 
+tyco_json_result tyco_parse_file_json(const char* path) {
+    tyco_json_result result{};
+    result.status = TYCO_ERROR_INVALID_ARGUMENT;
+    result.json = nullptr;
+    result.error = nullptr;
+
+    if (!path) {
+        assign_error("Invalid argument: null path", &result.error);
+        return result;
+    }
+
+    tyco_context* ctx = nullptr;
+    char* error = nullptr;
+    tyco_status status = tyco_load_file(path, &ctx, &error);
+    if (status != TYCO_OK) {
+        result.status = status;
+        result.error = error;
+        return result;
+    }
+
+    char* json = nullptr;
+    status = tyco_context_to_json(ctx, &json, &error);
+    tyco_context_free(ctx);
+
+    if (status != TYCO_OK) {
+        result.status = status;
+        result.error = error;
+        return result;
+    }
+
+    result.status = TYCO_OK;
+    result.json = json;
+    return result;
+}
+
+tyco_json_result tyco_parse_string_json(const char* source, const char* source_name) {
+    tyco_json_result result{};
+    result.status = TYCO_ERROR_INVALID_ARGUMENT;
+    result.json = nullptr;
+    result.error = nullptr;
+
+    if (!source) {
+        assign_error("Invalid argument: null source", &result.error);
+        return result;
+    }
+
+    tyco_context* ctx = nullptr;
+    char* error = nullptr;
+    tyco_status status = tyco_load_string(source, source_name ? source_name : "<string>", &ctx, &error);
+    if (status != TYCO_OK) {
+        result.status = status;
+        result.error = error;
+        return result;
+    }
+
+    char* json = nullptr;
+    status = tyco_context_to_json(ctx, &json, &error);
+    tyco_context_free(ctx);
+
+    if (status != TYCO_OK) {
+        result.status = status;
+        result.error = error;
+        return result;
+    }
+
+    result.status = TYCO_OK;
+    result.json = json;
+    return result;
+}
+
+void tyco_json_result_free(tyco_json_result* result) {
+    if (!result) {
+        return;
+    }
+    if (result->json) {
+        tyco_free_string(result->json);
+        result->json = nullptr;
+    }
+    if (result->error) {
+        tyco_free_string(result->error);
+        result->error = nullptr;
+    }
+}
+
 } // extern "C"

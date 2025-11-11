@@ -1,18 +1,18 @@
-Start testing: Nov 11 08:51 EST
+Start testing: Nov 11 09:05 EST
 ----------------------------------------------------------
 1/1 Testing: tyco_c_tests
 1/1 Test: tyco_c_tests
 Command: "/home/mlauria/typedconfig/tyco-c/build/tyco_c_tests"
 Directory: /home/mlauria/typedconfig/tyco-c/build
-"tyco_c_tests" start time: Nov 11 08:51 EST
+"tyco_c_tests" start time: Nov 11 09:05 EST
 Output:
 ----------------------------------------------------------
 <end of output>
-Test time =   0.01 sec
+Test time =   0.05 sec
 ----------------------------------------------------------
 Test Passed.
-"tyco_c_tests" end time: Nov 11 08:51 EST
+"tyco_c_tests" end time: Nov 11 09:05 EST
 "tyco_c_tests" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Nov 11 08:51 EST
+End testing: Nov 11 09:05 EST

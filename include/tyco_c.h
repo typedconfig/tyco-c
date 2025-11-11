@@ -51,6 +51,20 @@ void tyco_context_free(tyco_context* ctx);
  */
 void tyco_free_string(char* str);
 
+typedef struct tyco_json_result {
+    tyco_status status;
+    char* json;
+    char* error;
+} tyco_json_result;
+
+/**
+ * Convenience helpers that parse the document and return the JSON string directly.
+ * Call tyco_json_result_free once you are done with the result.
+ */
+tyco_json_result tyco_parse_file_json(const char* path);
+tyco_json_result tyco_parse_string_json(const char* source, const char* source_name);
+void tyco_json_result_free(tyco_json_result* result);
+
 #ifdef __cplusplus
 }
 #endif

@@ -37,8 +37,9 @@ tyco_context_free(ctx);
 tyco_context* ctx = NULL;
 char* error = NULL;
 
-// Parse a Tyco configuration file
-if (tyco_load_file("config.tyco", &ctx, &error) != TYCO_OK) {
+
+// Parse the bundled example.tyco file
+if (tyco_load_file("example.tyco", &ctx, &error) != TYCO_OK) {
     fprintf(stderr, "parse failed: %s\n", error);
     tyco_free_string(error);
     return;
