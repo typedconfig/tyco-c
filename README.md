@@ -27,46 +27,78 @@ ctest --test-dir build
 The default test already assumes the repo layout (`../tyco-test-suite`), so the extra definition is
 optional.
 
-## API Overview
+## Quick Start
 
-tyco_context* ctx = NULL;
-tyco_context_free(ctx);
+Every binding ships the canonical sample configuration as `tyco/example.tyco`
+([view on GitHub](https://github.com/typedconfig/tyco-c/blob/main/tyco/example.tyco)).
+You can load it directly with the C API:
+
 ```c
 #include "tyco_c.h"
+#include <stdio.h>
 
-tyco_context* ctx = NULL;
-char* error = NULL;
+int main(void) {
+    tyco_context* ctx = NULL;
+    char* error = NULL;
 
+    if (tyco_load_file("tyco/example.tyco", &ctx, &error) != TYCO_OK) {
+        fprintf(stderr, "parse failed: %s\n", error);
+        tyco_free_string(error);
+        return 1;
+    }
 
-// Parse the bundled example.tyco file
-if (tyco_load_file("example.tyco", &ctx, &error) != TYCO_OK) {
-    fprintf(stderr, "parse failed: %s\n", error);
-    tyco_free_string(error);
-    return;
+    char* json = NULL;
+    if (tyco_context_to_json(ctx, &json, &error) == TYCO_OK) {
+        printf("Full document:\n%s\n", json);
+        tyco_free_string(json);
+    } else {
+        fprintf(stderr, "json error: %s\n", error);
+        tyco_free_string(error);
+    }
+
+    tyco_context_free(ctx);
+    return 0;
 }
-
-// Access global configuration values (as JSON or via C API)
-char* globals_json = NULL;
-if (tyco_get_globals_json(ctx, &globals_json, &error) == TYCO_OK) {
-    printf("Globals: %s\n", globals_json);
-    tyco_free_string(globals_json);
-} else {
-    fprintf(stderr, "globals error: %s\n", error);
-    tyco_free_string(error);
-}
-
-// Access objects/instances (as JSON or via C API)
-char* objects_json = NULL;
-if (tyco_get_objects_json(ctx, &objects_json, &error) == TYCO_OK) {
-    printf("Objects: %s\n", objects_json);
-    tyco_free_string(objects_json);
-} else {
-    fprintf(stderr, "objects error: %s\n", error);
-    tyco_free_string(error);
-}
-
-tyco_context_free(ctx);
 ```
 
 Use `tyco_load_string` to parse from memory. All strings returned by the API must be released with
-`tyco_free_string`.
+`tyco_free_string`. Once you have the canonical JSON payload you can materialise it with any JSON
+library to access globals (`environment`, `debug`, `timeout`) plus the `Database` and `Server`
+arrays exactly like the Python example.
+
+### Example Tyco File
+
+```
+tyco/example.tyco
+```
+
+```tyco
+# Global configuration with type annotations
+str environment: production
+bool debug: false
+int timeout: 30
+
+# Database configuration struct
+Database:
+ *str name:           # Primary key field (*)
+  str host:
+  int port:
+  str connection_string:
+  # Instances
+  - primary, localhost,    5432, "postgresql://localhost:5432/myapp"
+  - replica, replica-host, 5432, "postgresql://replica-host:5432/myapp"
+
+# Server configuration struct  
+Server:
+ *str name:           # Primary key for referencing
+  int port:
+  str host:
+  ?str description:   # Nullable field (?) - can be null
+  # Server instances
+  - web1,    8080, web1.example.com,    description: "Primary web server"
+  - api1,    3000, api1.example.com,    description: null
+  - worker1, 9000, worker1.example.com, description: "Worker number 1"
+
+# Feature flags array
+str[] features: [auth, analytics, caching]
+```

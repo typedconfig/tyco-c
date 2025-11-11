@@ -26,4 +26,3 @@ Server:
 
 # Feature flags array
 str[] features: [auth, analytics, caching]
-
