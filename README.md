@@ -29,24 +29,38 @@ optional.
 
 ## API Overview
 
+tyco_context* ctx = NULL;
+tyco_context_free(ctx);
 ```c
 #include "tyco_c.h"
 
 tyco_context* ctx = NULL;
 char* error = NULL;
 
+// Parse a Tyco configuration file
 if (tyco_load_file("config.tyco", &ctx, &error) != TYCO_OK) {
     fprintf(stderr, "parse failed: %s\n", error);
     tyco_free_string(error);
     return;
 }
 
-char* json = NULL;
-if (tyco_context_to_json(ctx, &json, &error) == TYCO_OK) {
-    printf("%s\n", json);
-    tyco_free_string(json);
+// Access global configuration values (as JSON or via C API)
+char* globals_json = NULL;
+if (tyco_get_globals_json(ctx, &globals_json, &error) == TYCO_OK) {
+    printf("Globals: %s\n", globals_json);
+    tyco_free_string(globals_json);
 } else {
-    fprintf(stderr, "serialize failed: %s\n", error);
+    fprintf(stderr, "globals error: %s\n", error);
+    tyco_free_string(error);
+}
+
+// Access objects/instances (as JSON or via C API)
+char* objects_json = NULL;
+if (tyco_get_objects_json(ctx, &objects_json, &error) == TYCO_OK) {
+    printf("Objects: %s\n", objects_json);
+    tyco_free_string(objects_json);
+} else {
+    fprintf(stderr, "objects error: %s\n", error);
     tyco_free_string(error);
 }
 
