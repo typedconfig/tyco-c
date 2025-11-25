@@ -92,7 +92,7 @@ tyco_status tyco_load_string(const char* source, const char* source_name, tyco_c
     }
 }
 
-tyco_status tyco_context_to_json(const tyco_context* ctx, char** out_json, char** out_error) {
+tyco_status tyco_context_dumps_json(const tyco_context* ctx, char** out_json, char** out_error) {
     if (!ctx || !ctx->context || !out_json) {
         assign_error("Invalid argument: null pointer", out_error);
         return TYCO_ERROR_INVALID_ARGUMENT;
@@ -100,7 +100,7 @@ tyco_status tyco_context_to_json(const tyco_context* ctx, char** out_json, char*
     *out_json = nullptr;
 
     try {
-        auto json = ctx->context->to_json();
+        auto json = ctx->context->dumps_json(2);
         auto* copy = duplicate_string(json);
         if (!copy) {
             assign_error("Out of memory", out_error);
@@ -143,7 +143,7 @@ tyco_json_result tyco_parse_file_json(const char* path) {
     }
 
     char* json = nullptr;
-    status = tyco_context_to_json(ctx, &json, &error);
+    status = tyco_context_dumps_json(ctx, &json, &error);
     tyco_context_free(ctx);
 
     if (status != TYCO_OK) {
@@ -178,7 +178,7 @@ tyco_json_result tyco_parse_string_json(const char* source, const char* source_n
     }
 
     char* json = nullptr;
-    status = tyco_context_to_json(ctx, &json, &error);
+    status = tyco_context_dumps_json(ctx, &json, &error);
     tyco_context_free(ctx);
 
     if (status != TYCO_OK) {

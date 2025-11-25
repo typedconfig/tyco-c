@@ -39,7 +39,10 @@ tyco_status tyco_load_string(const char* source, const char* source_name, tyco_c
  * Serializes the context to the canonical JSON representation. Caller must free
  * the returned buffer via tyco_free_string.
  */
-tyco_status tyco_context_to_json(const tyco_context* ctx, char** out_json, char** out_error);
+tyco_status tyco_context_dumps_json(const tyco_context* ctx, char** out_json, char** out_error);
+
+/* Backwards compatibility */
+#define tyco_context_to_json tyco_context_dumps_json
 
 /**
  * Releases the context and any owned resources.

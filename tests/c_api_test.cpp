@@ -56,7 +56,7 @@ int main() {
         }
 
         char* json_cstr = nullptr;
-        if (tyco_context_to_json(ctx, &json_cstr, &error) != TYCO_OK) {
+        if (tyco_context_dumps_json(ctx, &json_cstr, &error) != TYCO_OK) {
             std::cerr << "Failed to serialize " << path << ": " << (error ? error : "unknown error") << std::endl;
             tyco_free_string(error);
             tyco_context_free(ctx);

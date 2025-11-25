@@ -48,7 +48,7 @@ int main(void) {
     }
 
     char* json = NULL;
-    if (tyco_context_to_json(ctx, &json, &error) == TYCO_OK) {
+    if (tyco_context_dumps_json(ctx, &json, &error) == TYCO_OK) {
         printf("Full document:\n%s\n", json);
         tyco_free_string(json);
     } else {
